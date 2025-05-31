@@ -1,4 +1,5 @@
-import{cart} from '../data/cart.js';
+import{cart,addToCart} from '../data/cart.js';
+import{products} from'../data/products.js';
 // const products = [{
 //     image: 'images/products/athletic-cotton-socks-6-pairs.jpg',
 //     name: 'Black and Gray Athletic Cotton Socks - 6 Pairs',
@@ -87,31 +88,23 @@ products.forEach((product) => {
 });
 document.querySelector('.js-productHTML').innerHTML = productHTML;
 
+function updateCartQuantity(){
+  
+  let cartCount = 0;
+  cart.forEach((item) => {
+    cartCount += item.quantity;
+  });
+
+  document.querySelector('.js-cartQuantity').innerHTML = cartCount;
+}
 document.querySelectorAll('.js-cartbutton').forEach((button) => {
   button.addEventListener('click', () => {
     const productId = button.dataset.productId;
-    
-    const productContainer = button.closest('.product-container');
-    const dropdown = productContainer.querySelector('.js-dropDown');
-    const selectedQuantity = Number(dropdown.value);
-
-    // console.log(`Selected quantity: ${selectedQuantity}`);
-    let matchingItem = cart.find(item => item.productId === productId);
-
-    if (matchingItem) {
-      matchingItem.quantity += selectedQuantity;
-    } else {
-      cart.push({
-        productId: productId,
-        quantity: selectedQuantity
-      });
-    }
-    let cartCount = 0;
-    cart.forEach((item) => {
-      cartCount += item.quantity;
-    });
-
-    document.querySelector('.js-cartQuantity').innerHTML = cartCount;
+  const productContainer = button.closest('.product-container');
+  const dropdown = productContainer.querySelector('.js-dropDown');
+  const selectedQuantity = Number(dropdown.value);
+    addToCart(productId,selectedQuantity);
+    updateCartQuantity();
   });
 });
 
